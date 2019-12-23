@@ -4,34 +4,74 @@ using UnityEngine;
 
 public class DamageSquare : MonoBehaviour
 {
+
+	#region Variables
+
 	[SerializeField]
 	private GameObject spot;
-	
+
 	private Spot[,] spots;
-	private int columns = 10;
-	private int damage;
+	private int columns = 7;
+	private int rows = 10;
+	private int damage = 0;
 	private float spriteHeight = 100;
 	private float spriteWidth = 100;
 	private float height;
 	private float width;
+	#endregion
 
+	#region Properties
 
 	public int damageColumns
 	{
 		get { return columns; }
-		set { columns = value; }
+		set { columns = value; ChangeColumns(); }
 	}
 
 	public int damageTaken
 	{
 		get { return damage; }
-		set { damage = value; }
+		set { damage = value; UpdateDamage(); }
+	}
+	#endregion
+
+	#region Private Methods
+	
+	private void ChangeColumns()
+	{
+		ClearSpots();
+		for (int i = 0; i < spots.GetLength(0); i++)
+		{
+			for (int j = columns; j < spots.GetLength(1); j++)
+			{
+				spots[i, j].spotfill = SpotFill.Fully;
+			}
+		}
+		UpdateDamage();
 	}
 
-	private void Start()
+	private void UpdateDamage()
 	{
-		spots = new Spot[10, 10];
-		
+		int cap = damage <= columns * spots.GetLength(0) ? damage : columns * spots.GetLength(0);
+
+
+		for (int i = 0; i < cap; i++)
+		{
+			spots[i / (columns), i % (columns)].spotfill = SpotFill.Fully;
+		}
+	}
+
+	private void ClearSpots()
+	{
+		foreach (Spot spot in spots)
+		{
+			spot.spotfill = SpotFill.Empty;
+		}
+	}
+	private void Awake()
+	{
+		spots = new Spot[rows, 10];
+
 		spriteHeight *= spot.transform.localScale.y;
 		spriteWidth *= spot.transform.localScale.x;
 		height = spriteHeight * spots.GetLength(0);
@@ -44,9 +84,13 @@ public class DamageSquare : MonoBehaviour
 				spots[i, j] = Instantiate(spot).GetComponent<Spot>();
 				spots[i, j].transform.parent = transform;
 				//Setting position
-				spots[i, j].transform.localPosition = Vector3.up * height * 0.5f -(Vector3.up *  spriteHeight * i);
-				spots[i, j].transform.localPosition += Vector3.right * width * 0.5f - (Vector3.right * spriteWidth * j);
+				spots[i, j].transform.localPosition = Vector3.up * height * 0.5f - (Vector3.up * spriteHeight * i);
+				spots[i, j].transform.localPosition += (Vector3.right * spriteWidth * j) - Vector3.right * width * 0.5f  ;
 			}
 		}
 	}
+
+	#endregion
+
+
 }
