@@ -36,7 +36,7 @@ public class DamageSquare : MonoBehaviour
 	#endregion
 
 	#region Private Methods
-	
+
 	private void ChangeColumns()
 	{
 		ClearSpots();
@@ -52,12 +52,19 @@ public class DamageSquare : MonoBehaviour
 
 	private void UpdateDamage()
 	{
-		int cap = damage <= columns * spots.GetLength(0) ? damage : columns * spots.GetLength(0);
-
+		//int cap = damage <= columns * spots.GetLength(0) ? damage : columns * spots.GetLength(0);
+		int cap = columns * spots.GetLength(0);
 
 		for (int i = 0; i < cap; i++)
 		{
-			spots[i / (columns), i % (columns)].spotfill = SpotFill.Fully;
+			if (i < damage)
+			{
+				spots[i / (columns), i % (columns)].spotfill = SpotFill.Fully;
+			}
+			else
+			{
+				spots[i / (columns), i % (columns)].spotfill = SpotFill.Empty;
+			}
 		}
 	}
 
@@ -85,7 +92,7 @@ public class DamageSquare : MonoBehaviour
 				spots[i, j].transform.parent = transform;
 				//Setting position
 				spots[i, j].transform.localPosition = Vector3.up * height * 0.5f - (Vector3.up * spriteHeight * i);
-				spots[i, j].transform.localPosition += (Vector3.right * spriteWidth * j) - Vector3.right * width * 0.5f  ;
+				spots[i, j].transform.localPosition += (Vector3.right * spriteWidth * j) - Vector3.right * width * 0.5f;
 			}
 		}
 	}

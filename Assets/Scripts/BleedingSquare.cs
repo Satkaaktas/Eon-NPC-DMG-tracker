@@ -29,18 +29,12 @@ public class BleedingSquare : MonoBehaviour
 	#endregion
 
 	#region Private Methods
-	private void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.P))
-			damageTaken++;
-	}
+	
 	private void UpdateDamage()
 	{
-		
-		int cap = damage <= (spots.Length * spots[1].Length) - 1 ? damage : (spots.Length * spots[1].Length-1);
+		int cap = damage <= (spots.Length * spots[1].Length) - 1 ? damage : (spots.Length * spots[1].Length);
 
-
-		for (int i = 0; i < cap +1; i++)
+		for (int i = 0; i < cap; i++)
 		{
 			i = i == 9 ? 10 : i;
 			spots[i / spots[1].Length][i % spots[1].Length].spotfill = SpotFill.Fully;
