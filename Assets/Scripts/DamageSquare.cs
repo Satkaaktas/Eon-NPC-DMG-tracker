@@ -90,6 +90,7 @@ public class DamageSquare : MonoBehaviour
 			{
 				spots[i, j] = Instantiate(spot).GetComponent<Spot>();
 				spots[i, j].transform.parent = transform;
+				spots[i, j].transform.SetAsFirstSibling();
 				//Setting position
 				spots[i, j].transform.localPosition = Vector3.up * height * 0.5f - (Vector3.up * spriteHeight * i);
 				spots[i, j].transform.localPosition += (Vector3.right * spriteWidth * j) - Vector3.right * width * 0.5f;

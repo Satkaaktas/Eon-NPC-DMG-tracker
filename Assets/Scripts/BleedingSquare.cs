@@ -29,15 +29,24 @@ public class BleedingSquare : MonoBehaviour
 	#endregion
 
 	#region Private Methods
-	
+
 	private void UpdateDamage()
 	{
-		int cap = damage <= (spots.Length * spots[1].Length) - 1 ? damage : (spots.Length * spots[1].Length);
-
+		//int cap = damage <= (spots.Length * spots[1].Length) - 1 ? damage : (spots.Length * spots[1].Length);
+		int cap = spots[0].Length * spots[1].Length - 1;
+		int _index = 0;
 		for (int i = 0; i < cap; i++)
 		{
-			i = i == 9 ? 10 : i;
-			spots[i / spots[1].Length][i % spots[1].Length].spotfill = SpotFill.Fully;
+			if(i == 9)
+			{
+				_index = 1;
+				i++;
+				damage++;
+			}
+			if (i < damage)
+				spots[i / spots[_index].Length][i % spots[_index].Length].spotfill = SpotFill.Fully;
+			else
+				spots[i / spots[_index].Length][i % spots[_index].Length].spotfill = SpotFill.Empty;
 		}
 	}
 
@@ -71,6 +80,7 @@ public class BleedingSquare : MonoBehaviour
 			{
 				spots[i][j] = Instantiate(spot).GetComponent<Spot>();
 				spots[i][j].transform.parent = transform;
+				spots[i][j].transform.SetAsFirstSibling();
 				//Setting position
 				spots[i][j].transform.localPosition = Vector3.up * height * 0.5f - (Vector3.up * spriteHeight * i);
 				spots[i][j].transform.localPosition += (Vector3.right * spriteWidth * j) - Vector3.right * width * 0.5f;
