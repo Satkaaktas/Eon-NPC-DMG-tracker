@@ -50,16 +50,7 @@ public class BleedingSquare : MonoBehaviour
 		}
 	}
 
-	private void ClearSpots()
-	{
-		for (int i = 0; i < spots.Length; i++)
-		{
-			for (int j = 0; j < spots[i].Length; j++)
-			{
-				spots[i][j].spotfill = SpotFill.Empty;
-			}
-		}
-	}
+	
 	private void Awake()
 	{
 		spots = new Spot[rows][];
@@ -84,6 +75,31 @@ public class BleedingSquare : MonoBehaviour
 				//Setting position
 				spots[i][j].transform.localPosition = Vector3.up * height * 0.5f - (Vector3.up * spriteHeight * i);
 				spots[i][j].transform.localPosition += (Vector3.right * spriteWidth * j) - Vector3.right * width * 0.5f;
+			}
+		}
+	}
+
+	#endregion
+
+	#region Public Methods
+
+	public int GetStat()
+	{
+		int _diff = 0;
+		int _dmg = damage > 9 ? damage + 1 : damage;
+
+		_diff = _dmg / spots[1].Length;
+
+		return _diff;
+	}
+
+	public void ClearSpots()
+	{
+		for (int i = 0; i < spots.Length; i++)
+		{
+			for (int j = 0; j < spots[i].Length; j++)
+			{
+				spots[i][j].spotfill = SpotFill.Empty;
 			}
 		}
 	}

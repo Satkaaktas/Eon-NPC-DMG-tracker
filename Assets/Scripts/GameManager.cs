@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,8 @@ public class GameManager : MonoBehaviour
 	[SerializeField] DamageSquare[] dmgSquares;
 	[SerializeField] BleedingSquare bleedingSquare;
 	[SerializeField] Image[] highlights;
-	[SerializeField] GameObject content, NPCButtonPrefab;
+	[SerializeField] Text[] stats;
+	[SerializeField] GameObject content, NPCButtonPrefab, AreYouSurePanel;
 	private int selectedSquare;
 	private NPC activeNPC;
 
@@ -27,7 +29,7 @@ public class GameManager : MonoBehaviour
 	{
 		set { activeNPC = value; SetNPC(); }
 	}
-	
+
 
 	#endregion
 
@@ -85,6 +87,8 @@ public class GameManager : MonoBehaviour
 		dmgSquares[3].damageTaken = activeNPC.damageCrosses[3];
 
 		bleedingSquare.damageTaken = activeNPC.bleedingCrosses;
+
+		UpdateStats();
 	}
 
 	public void UpdateDamage()
@@ -95,6 +99,7 @@ public class GameManager : MonoBehaviour
 		}
 
 		bleedingSquare.damageTaken = activeNPC.bleedingCrosses;
+		UpdateStats();
 	}
 
 	public void CreateNPC(int dmgColumns, int exhColumns)
@@ -111,6 +116,7 @@ public class GameManager : MonoBehaviour
 		_button.GetComponent<PlayerButton>().NPC = activeNPC;
 		_button.transform.GetChild(0).GetComponent<Text>().text = activeNPC.name;
 	}
+
 
 
 	#region UI
@@ -158,6 +164,66 @@ public class GameManager : MonoBehaviour
 		}
 		else
 			Debug.Log("No active NPC");
+	}
+
+	private void UpdateStats()
+	{
+		int[] _rows = new int[4];
+
+		for (int i = 0; i < _rows.Length; i++)
+		{
+			_rows[i] = dmgSquares[i].GetStat();
+		}
+
+		//Dödsslag
+		stats[0].text = "Dödsslag: OB" + (_rows[0] + _rows[2]) + "T6";
+		//Chockslag
+		stats[1].text = "Chockslag: OB" + (_rows[0] + _rows[1] + _rows[2]) + "T6";
+		//Svårighetsökning
+		stats[2].text = "Svårighetsökning: OB" + (_rows[1] + _rows[3]) + "T6";
+		//Förflyttningsmod
+		string _prefix = _rows[1] + _rows[3] > 0 ? "-" : "\u00B1";
+		stats[3].text = "Förflyttning: " + _prefix + (_rows[1] + _rows[3]);
+	}
+
+	public void AddBloodLoss()
+	{
+		int _bleeding = bleedingSquare.GetStat();
+
+		if (activeNPC != null)
+		{
+			activeNPC.Damage(_bleeding, 2);
+			UpdateDamage();
+		}
+		else
+			Debug.Log("No active NPC");
+
+	}
+
+	public void DeleteNPC()
+	{
+		if (activeNPC != null)
+		{
+			PlayerButton _button = activeNPC.button;
+
+			//This (probablly?) creates garbage
+			activeNPC = null;
+
+			foreach (DamageSquare square in dmgSquares)
+			{
+				square.ClearSpots();
+			}
+			bleedingSquare.ClearSpots();
+
+
+			Destroy(_button.gameObject);
+
+			ToggleAreYouSurePanel(false);
+		}
+	}
+	public void ToggleAreYouSurePanel(bool active)
+	{
+		AreYouSurePanel.SetActive(active);
 	}
 
 	#endregion

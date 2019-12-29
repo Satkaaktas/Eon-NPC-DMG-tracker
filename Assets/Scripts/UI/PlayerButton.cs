@@ -8,7 +8,7 @@ public class PlayerButton : MonoBehaviour
 
 	public NPC NPC
 	{
-		set { myNPC = value; }
+		set { myNPC = value; myNPC.button = this; }
 	}
 
 	public void SelectNPC()

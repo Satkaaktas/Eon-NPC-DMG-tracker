@@ -8,6 +8,7 @@ public class NPC
 	private int[] partialDamage;
 	private int bleeding, columns, exhaustionColumns;
 	private string myName;
+	private PlayerButton myButton;
 
 	#region Properties
 
@@ -34,6 +35,11 @@ public class NPC
 	public string name
 	{
 		get { return myName; }
+	}
+	public PlayerButton button
+	{
+		get { return myButton; }
+		set { myButton = value; }
 	}
 
 	#endregion

@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TypeOfSquare { Trauma, Pain, BloodLoss, Exhaustion }
+
 public class DamageSquare : MonoBehaviour
 {
 
 	#region Variables
 
-	[SerializeField]
-	private GameObject spot;
+	[SerializeField] TypeOfSquare type;
+	[SerializeField] private GameObject spot;
 
 	private Spot[,] spots;
 	private int columns = 7;
@@ -68,13 +70,7 @@ public class DamageSquare : MonoBehaviour
 		}
 	}
 
-	private void ClearSpots()
-	{
-		foreach (Spot spot in spots)
-		{
-			spot.spotfill = SpotFill.Empty;
-		}
-	}
+	
 	private void Awake()
 	{
 		spots = new Spot[rows, 10];
@@ -100,5 +96,33 @@ public class DamageSquare : MonoBehaviour
 
 	#endregion
 
+	#region Public Methods
 
+	public int GetStat()
+	{
+		int _diff = 0;
+		int _dmg = damage > 0 ? damage - 1 : 0;
+
+		_diff = _dmg / columns;
+		if(type == TypeOfSquare.BloodLoss && _diff > 0)
+		{
+			_diff--;
+		}
+		else if(type == TypeOfSquare.Exhaustion && _diff > 0)
+		{
+			_diff = _dmg / (columns*2);
+		}
+
+		return _diff;
+	}
+
+	public void ClearSpots()
+	{
+		foreach (Spot spot in spots)
+		{
+			spot.spotfill = SpotFill.Empty;
+		}
+	}
+
+	#endregion
 }

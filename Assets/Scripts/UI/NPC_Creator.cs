@@ -25,16 +25,16 @@ public class NPC_Creator : MonoBehaviour
 	{
 		nameInput.text = "";
 		buttons = new Image[2, 10];
-		Transform _obj = GameObject.Find("dmgColumns").transform;
+		Transform _obj = GameObject.Find("dmgColumnsText").transform;
 		for (int i = 0; i < buttons.GetLength(1); i++)
 		{
-			buttons[0, i] = _obj.GetChild(i).GetComponent<Image>();
+			buttons[0, i] = _obj.GetChild(0).GetChild(i).GetComponent<Image>();
 		}
 
-		_obj = GameObject.Find("exhaustionColumns").transform;
+		_obj = GameObject.Find("exhaustionColumnsText").transform;
 		for (int i = 0; i < buttons.GetLength(1); i++)
 		{
-			buttons[1, i] = _obj.GetChild(i).GetComponent<Image>();
+			buttons[1, i] = _obj.GetChild(0).GetChild(i).GetComponent<Image>();
 		}
 		NPCCreationPanel.SetActive(false);
 	}
@@ -55,7 +55,7 @@ public class NPC_Creator : MonoBehaviour
 
 	public void ShowNPCPanel()
 	{
-		NPCCreationPanel.SetActive(true);
+		NPCCreationPanel.SetActive(!NPCCreationPanel.activeInHierarchy);
 	}
 
 	public void setDmgColumns(int columns)
